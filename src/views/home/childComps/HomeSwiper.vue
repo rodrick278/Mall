@@ -43,15 +43,8 @@ export default {
   .my-swipe .van-swipe-item img {
     width: 450px;
     height: 225px;
-    
-  }
-  .my-swipe .van-swipe-item a {
     position: relative;
     left:calc((100vw - 450px) / 2)
-  }
-
-  body {
-    background: red;
   }
 }
 </style>
