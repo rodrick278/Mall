@@ -39,12 +39,12 @@ export default {
   height: 50vw;
 }
 
-@media screen and (min-width: 450px) {
+/* @media screen and (min-width: 450px) {
   .my-swipe .van-swipe-item img {
     width: 450px;
     height: 225px;
     position: relative;
     left:calc((100vw - 450px) / 2)
   }
-}
+} */
 </style>
