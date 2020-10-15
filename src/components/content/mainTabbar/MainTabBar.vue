@@ -1,5 +1,5 @@
 <template>
-  <tab-bar>
+  <tab-bar class="tab-bar">
     <template v-slot:default>
       <tab-bar-item path="/home">
         <template v-slot:item-icon>
@@ -59,13 +59,15 @@ import TabBarItem from "components/common/tabbar/TabBarItem";
 
 export default {
   name: "MainTabBar",
-    components: {
+  components: {
     TabBar,
     TabBarItem,
   },
-
 };
 </script>
 
 <style scoped>
+.tab-bar {
+  z-index: 9999;
+}
 </style>

@@ -30,7 +30,8 @@ export default {
   },
   methods: {
     itemClick(index) {
-      this.curIndex=index
+      this.curIndex = index;
+      this.$emit("tabClick", index);
     },
   },
 };
@@ -42,7 +43,6 @@ export default {
   justify-content: space-around;
   padding-top: 10px;
   height: 2.5rem;
-  
 }
 
 .tab-control-item span {

@@ -12,74 +12,10 @@
     <tab-control
       class="tab-control"
       :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
     ></tab-control>
-    <ul>
-      <li>list1</li>
-      <li>list2</li>
-      <li>list3</li>
-      <li>list4</li>
-      <li>list5</li>
-      <li>list6</li>
-      <li>list7</li>
-      <li>list8</li>
-      <li>list9</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-      <li>list10</li>
-    </ul>
+    <!-- 滚动商品列表 -->
+    <goods-list :goods="showGoods"></goods-list>
   </div>
 </template>
 
@@ -90,8 +26,9 @@ import FeatureView from "./childComps/FeatureView";
 
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
+import GoodsList from "components/content/goods/GoodsList";
 
-import { getHomeMultidata } from "network/home.js";
+import { getHomeMultidata, getHomeGoods } from "network/home.js";
 
 export default {
   name: "home",
@@ -99,7 +36,18 @@ export default {
     return {
       banners: [],
       recommends: [],
+      goods: {
+        pop: { page: 0, list: [] },
+        new: { page: 0, list: [] },
+        sell: { page: 0, list: [] },
+      },
+      curType: "pop",
     };
+  },
+  computed: {
+    showGoods() {
+      return this.goods[this.curType].list;
+    },
   },
   components: {
     HomeSwiper,
@@ -107,13 +55,50 @@ export default {
     FeatureView,
     NavBar,
     TabControl,
+    GoodsList,
   },
   created() {
     // 1.请求首页的多个数据
-    getHomeMultidata().then((res) => {
-      this.banners = res.data.banner.list;
-      this.recommends = res.data.recommend.list;
-    });
+    this.getHomeMultidataMethod();
+    // 2.请求首页下面的商品
+    this.getHomeGoodsMethod("pop");
+    this.getHomeGoodsMethod("new");
+    this.getHomeGoodsMethod("sell");
+  },
+  methods: {
+    /**
+     * 网络请求
+     */
+    getHomeMultidataMethod() {
+      getHomeMultidata().then((res) => {
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      });
+    },
+    getHomeGoodsMethod(type) {
+      // 动态拿到page值 然后对当前的page+1
+      const page = this.goods[type].page + 1;
+      getHomeGoods(type, page).then((res) => {
+        this.goods[type].list.push(...res.data.list);
+        this.goods[type].page += 1;
+      });
+    },
+    /**
+     * 事件监听
+     */
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.curType = "pop";
+          break;
+        case 1:
+          this.curType = "new";
+          break;
+        case 2:
+          this.curType = "sell";
+          break;
+      }
+    },
   },
 };
 </script>
@@ -136,6 +121,7 @@ export default {
 .tab-control {
   position: sticky;
   top: 44px;
-  background-color:#fff;
+  background-color: #fff;
+  z-index: 9999;
 }
 </style>
