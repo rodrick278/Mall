@@ -67,7 +67,6 @@ export default {
     BackTop,
   },
   created() {
-    console.log(process.env.VUE_APP_BASEURL);
     // 1.请求首页的多个数据
     this.getHomeMultidataMethod();
     // 2.请求首页下面的商品
