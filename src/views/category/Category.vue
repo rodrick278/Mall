@@ -107,24 +107,26 @@
 
 <script>
 import BScroll from "@better-scroll/core";
+import Pullup from "@better-scroll/pull-up";
+
+BScroll.use(Pullup);
 
 export default {
   name: "category",
   data() {
-    return {
-    };
+    return {};
   },
   mounted() {
     this.$nextTick(() => {
       this.scroll = new BScroll(this.$refs.wrapper, {
-        probeType: 1,
+        // probeType: 3,
+        // pullUpLoad: true,
       });
-      //  console.log(this.scroll);
-    this.scroll.on("scroll", (pos) => {
-      console.log(pos);
+      // this.scroll.on("scroll", (pos) => {
+      //   console.log(pos);
+      // });
+      // this.scroll.on('pullingUp', ()=>{console.log('上拉加载');})
     });
-    });
-   
   },
 };
 </script>

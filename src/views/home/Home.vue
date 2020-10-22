@@ -3,19 +3,24 @@
     <nav-bar class="home-nav">
       <template #center> 购物街 </template>
     </nav-bar>
-    <!-- 轮播图 -->
-    <home-swiper :banners="banners"></home-swiper>
-    <!-- 中间推荐信息 -->
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view />
-    <!-- 下方信息 -->
-    <tab-control
-      class="tab-control"
-      :titles="['流行', '新款', '精选']"
-      @tabClick="tabClick"
-    ></tab-control>
-    <!-- 滚动商品列表 -->
-    <goods-list :goods="showGoods"></goods-list>
+
+    <scroll class="content" ref="scroll">
+      <!-- 轮播图 -->
+      <home-swiper :banners="banners"></home-swiper>
+      <!-- 中间推荐信息 -->
+      <recommend-view :recommends="recommends"></recommend-view>
+      <feature-view />
+      <!-- 下方信息 -->
+      <tab-control
+        class="tab-control"
+        :titles="['流行', '新款', '精选']"
+        @tabClick="tabClick"
+      ></tab-control>
+      <!-- 滚动商品列表 -->
+      <goods-list :goods="showGoods"></goods-list>
+    </scroll>
+
+    <back-top @click.native ="btClick"></back-top>
   </div>
 </template>
 
@@ -27,6 +32,8 @@ import FeatureView from "./childComps/FeatureView";
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
+import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home.js";
 
@@ -56,8 +63,11 @@ export default {
     NavBar,
     TabControl,
     GoodsList,
+    Scroll,
+    BackTop,
   },
   created() {
+    console.log(process.env.VUE_APP_BASEURL);
     // 1.请求首页的多个数据
     this.getHomeMultidataMethod();
     // 2.请求首页下面的商品
@@ -99,6 +109,9 @@ export default {
           break;
       }
     },
+    btClick() {
+      this.$refs.scroll.scrollTo(0,0,500)
+    },
   },
 };
 </script>
@@ -123,5 +136,9 @@ export default {
   top: 44px;
   background-color: #fff;
   z-index: 9999;
+}
+
+.content {
+  height: calc(100vh - 95px);
 }
 </style>

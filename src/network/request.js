@@ -11,7 +11,7 @@ import axios from "axios";
 export function request(config) {
   // 由于axios.create返回的本身是AxiosInstance对象，而AxiosInstance(config)方法返回的就是 AxiosPromise对象，所以直接返回Promise对象就好
   const instance = axios.create({
-    baseURL: 'http://152.136.185.210:8000/api/w6',
+    baseURL: process.env.VUE_APP_BASEURL,
     timeout: 3000
   })
 
