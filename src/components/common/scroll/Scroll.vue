@@ -14,6 +14,12 @@ BScroll.use(Pullup);
 
 export default {
   name: "Scroll",
+  props: {
+    probeType: {
+      type: Number,
+      default: 0,
+    },
+  },
   mounted() {
     // this.$nextTick(() => {});
     // 保证在DOM渲染完毕后初始化better-scroll
@@ -28,9 +34,12 @@ export default {
       }
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true,
-        // observeDOM: true,
-        // probeType: 3,
+        probeType: this.probeType,
         // pullUpLoad: true,
+      });
+
+      this.scroll.on("scroll", (pos) => {
+        this.$emit("scroll", pos);
       });
     },
     scrollTo(x, y, time = 300) {

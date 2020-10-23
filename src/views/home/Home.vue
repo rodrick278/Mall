@@ -4,7 +4,12 @@
       <template #center> 购物街 </template>
     </nav-bar>
 
-    <scroll class="content" ref="scroll">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+    >
       <!-- 轮播图 -->
       <home-swiper :banners="banners"></home-swiper>
       <!-- 中间推荐信息 -->
@@ -20,7 +25,7 @@
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
 
-    <back-top @click.native ="btClick"></back-top>
+    <back-top @click.native="btClick" v-show="isShow"></back-top>
   </div>
 </template>
 
@@ -49,6 +54,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       curType: "pop",
+      isShow: false,
     };
   },
   computed: {
@@ -109,7 +115,10 @@ export default {
       }
     },
     btClick() {
-      this.$refs.scroll.scrollTo(0,0,500)
+      this.$refs.scroll.scrollTo(0, 0, 500);
+    },
+    contentScroll(pos) {
+      this.isShow = Math.abs(pos.y) > 500;
     },
   },
 };
