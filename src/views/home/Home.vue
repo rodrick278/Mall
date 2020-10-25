@@ -8,7 +8,9 @@
       class="content"
       ref="scroll"
       :probe-type="3"
+      :pull-up-load="true"
       @scroll="contentScroll"
+      @pullingUp="getMoreInfo"
     >
       <!-- 轮播图 -->
       <home-swiper :banners="banners"></home-swiper>
@@ -23,6 +25,11 @@
       ></tab-control>
       <!-- 滚动商品列表 -->
       <goods-list :goods="showGoods"></goods-list>
+      <div class="pullup-tips">
+        <div class="after-trigger">
+          <span class="pullup-txt">Loading...</span>
+        </div>
+      </div>
     </scroll>
 
     <back-top @click.native="btClick" v-show="isShow"></back-top>
@@ -120,6 +127,14 @@ export default {
     contentScroll(pos) {
       this.isShow = Math.abs(pos.y) > 500;
     },
+    getMoreInfo() {
+      console.log("getMoreInfo");
+      this.getHomeGoodsMethod(this.curType);
+      setTimeout(() => {
+        this.$refs.scroll.scroll.finishPullUp();
+        this.$refs.scroll.scroll.refresh();
+      }, 300);
+    },
   },
 };
 </script>
@@ -148,5 +163,11 @@ export default {
 
 .content {
   height: calc(100vh - 95px);
+}
+
+.pullup-tips {
+  padding: 20px;
+  text-align: center;
+  color: #999;
 }
 </style>

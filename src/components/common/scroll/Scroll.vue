@@ -19,6 +19,10 @@ export default {
       type: Number,
       default: 0,
     },
+    pullUpLoad: {
+      type: Boolean,
+      default: false,
+    },
   },
   mounted() {
     // this.$nextTick(() => {});
@@ -35,16 +39,23 @@ export default {
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true,
         probeType: this.probeType,
-        // pullUpLoad: true,
+        pullUpLoad: this.pullUpLoad,
       });
 
       this.scroll.on("scroll", (pos) => {
         this.$emit("scroll", pos);
       });
+
+      this.scroll.on("pullingUp", ()=>{
+        this.$emit("pullingUp");
+      });
     },
     scrollTo(x, y, time = 300) {
       this.scroll.scrollTo(x, y, time);
     },
+    // finishPullUp(){
+    //   this.scroll.finishPullUp()
+    // }
   },
 };
 </script>

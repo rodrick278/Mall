@@ -2,7 +2,6 @@
   <div class="goods">
     <goods-list-item
       v-for="item of goods"
-      :key="item.iid"
       :goodsItem="item"
     ></goods-list-item>
   </div>
