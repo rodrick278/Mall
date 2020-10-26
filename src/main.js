@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+Vue.prototype.$bus = new Vue() // event Bus 用于无关系组件间的通信。
 
 Vue.config.productionTip = false
 

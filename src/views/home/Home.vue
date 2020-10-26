@@ -87,6 +87,18 @@ export default {
     this.getHomeGoodsMethod("new");
     this.getHomeGoodsMethod("sell");
   },
+  mounted() {
+    // 3.监听事件总线的图片加载事件
+    const refresh = this.debounce(this.$refs.scroll?.refresh, 200);
+    // this.$bus.$on("itemImgLoad", () => {
+    //   // 作用是可以在图片加载后重新计算现在可滚动区域的高度，避免图片还没加载结束就已经算好高度，或者切换类别的时候用上一个类别的高度
+    //   this.$refs.scroll?.refresh();
+    // });
+    this.$bus.$on("itemImgLoad", () => {
+      // 作用是可以在图片加载后重新计算现在可滚动区域的高度，避免图片还没加载结束就已经算好高度，或者切换类别的时候用上一个类别的高度
+      refresh();
+    });
+  },
   methods: {
     /**
      * 网络请求
@@ -108,6 +120,16 @@ export default {
     /**
      * 事件监听
      */
+    debounce(func, delay = 300) {
+      let timer = null;
+      return function (...args) {
+        if (timer) clearTimeout(timer);
+
+        timer = setTimeout(() => {
+          func.apply(this, args);
+        }, delay);
+      };
+    },
     tabClick(index) {
       switch (index) {
         case 0:
@@ -128,11 +150,10 @@ export default {
       this.isShow = Math.abs(pos.y) > 500;
     },
     getMoreInfo() {
-      console.log("getMoreInfo");
       this.getHomeGoodsMethod(this.curType);
       setTimeout(() => {
-        this.$refs.scroll.scroll.finishPullUp();
-        this.$refs.scroll.scroll.refresh();
+        this.$refs.scroll.finishPullUp();
+        this.$refs.scroll.refresh();
       }, 300);
     },
   },

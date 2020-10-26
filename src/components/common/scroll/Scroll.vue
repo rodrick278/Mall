@@ -25,11 +25,8 @@ export default {
     },
   },
   mounted() {
-    // this.$nextTick(() => {});
     // 保证在DOM渲染完毕后初始化better-scroll
-    setTimeout(() => {
-      this._initScroll();
-    }, 1000);
+    this.$nextTick(() => this._initScroll());
   },
   methods: {
     _initScroll() {
@@ -46,16 +43,20 @@ export default {
         this.$emit("scroll", pos);
       });
 
+
       this.scroll.on("pullingUp", ()=>{
         this.$emit("pullingUp");
       });
     },
     scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
+      this.scroll?.scrollTo(x, y, time);
     },
-    // finishPullUp(){
-    //   this.scroll.finishPullUp()
-    // }
+    finishPullUp(){
+      this.scroll?.finishPullUp()
+    },
+    refresh(){
+      this.scroll?.refresh()
+    }
   },
 };
 </script>
