@@ -3,7 +3,12 @@
     <nav-bar class="home-nav">
       <template #center> 购物街 </template>
     </nav-bar>
-
+    <tab-control
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControlOut"
+      v-show="isTabFixed"
+    ></tab-control>
     <scroll
       class="content"
       ref="scroll"
@@ -13,15 +18,19 @@
       @pullingUp="getMoreInfo"
     >
       <!-- 轮播图 -->
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper
+        :banners="banners"
+        @imgLoadFinish="imgLoadFinish"
+      ></home-swiper>
       <!-- 中间推荐信息 -->
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view />
       <!-- 下方信息 -->
       <tab-control
-        class="tab-control"
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"
+        ref="tabControlIn"
+        v-show="!isTabFixed"
       ></tab-control>
       <!-- 滚动商品列表 -->
       <goods-list :goods="showGoods"></goods-list>
@@ -47,7 +56,8 @@ import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/content/backTop/BackTop";
 
-import { getHomeMultidata, getHomeGoods } from "network/home.js";
+import { getHomeMultidata, getHomeGoods } from "network/home";
+import { debounce } from "common/utils";
 
 export default {
   name: "home",
@@ -62,6 +72,9 @@ export default {
       },
       curType: "pop",
       isShow: false,
+      tabOffsetTop: 0,
+      offsetHeight: 0,
+      isTabFixed: false,
     };
   },
   computed: {
@@ -89,7 +102,7 @@ export default {
   },
   mounted() {
     // 3.监听事件总线的图片加载事件
-    const refresh = this.debounce(this.$refs.scroll?.refresh, 200);
+    const refresh = debounce(this.$refs.scroll?.refresh, 200);
     // this.$bus.$on("itemImgLoad", () => {
     //   // 作用是可以在图片加载后重新计算现在可滚动区域的高度，避免图片还没加载结束就已经算好高度，或者切换类别的时候用上一个类别的高度
     //   this.$refs.scroll?.refresh();
@@ -98,6 +111,24 @@ export default {
       // 作用是可以在图片加载后重新计算现在可滚动区域的高度，避免图片还没加载结束就已经算好高度，或者切换类别的时候用上一个类别的高度
       refresh();
     });
+  },
+  watch: {
+    curType(curType) {
+      let index = 0;
+      switch (curType) {
+        case "pop":
+          index = 0;
+          break;
+        case "new":
+          index = 1;
+          break;
+        case "sell":
+          index = 2;
+          break;
+      }
+      this.$refs.tabControlOut.curIndex = index;
+      this.$refs.tabControlIn.curIndex = index;
+    },
   },
   methods: {
     /**
@@ -120,16 +151,6 @@ export default {
     /**
      * 事件监听
      */
-    debounce(func, delay = 300) {
-      let timer = null;
-      return function (...args) {
-        if (timer) clearTimeout(timer);
-
-        timer = setTimeout(() => {
-          func.apply(this, args);
-        }, delay);
-      };
-    },
     tabClick(index) {
       switch (index) {
         case 0:
@@ -147,7 +168,10 @@ export default {
       this.$refs.scroll.scrollTo(0, 0, 500);
     },
     contentScroll(pos) {
+      // 判断 back-top 是否显示
       this.isShow = Math.abs(pos.y) > 500;
+      // 判断 tabControl 是否吸顶
+      this.isTabFixed = Math.abs(pos.y) > this.tabOffsetTop - this.offsetHeight;
     },
     getMoreInfo() {
       this.getHomeGoodsMethod(this.curType);
@@ -156,34 +180,40 @@ export default {
         this.$refs.scroll.refresh();
       }, 300);
     },
+    imgLoadFinish() {
+      // 4. 拿到tabControl的tabOffsetTop
+      // 所有的组件都有$el用于获取组件的元素
+      this.tabOffsetTop = this.$refs.tabControlIn.$el.offsetTop;
+      this.offsetHeight = this.$refs.tabControlIn.$el.offsetHeight;
+    },
   },
 };
 </script>
 
 <style scoped>
-#home {
-  margin-top: 44px;
-}
-
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-
-  position: fixed;
+  z-index: 9999;
+  /* 由于BSCroll只会滚动限制区域，所以 home-nav 就不用 fixed 来脱离文档流了 */
+  /* position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 9999; */
 }
-.tab-control {
+
+/* 使用BScroll后吸顶会失效 */
+/* .tab-control {
   position: sticky;
   top: 44px;
   background-color: #fff;
   z-index: 9999;
-}
+} */
 
 .content {
   height: calc(100vh - 95px);
+  overflow: hidden;
 }
 
 .pullup-tips {
