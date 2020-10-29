@@ -1,13 +1,11 @@
 <template>
-  <div class="goods">
-    <a :href="goodsItem.link">
-      <img :src="goodsItem.show.img" alt="" @load="imgLoad"/>
-      <div class="goods-info">
-        <p>{{ goodsItem.title }}</p>
-        <span class="price">{{ goodsItem.price }}</span>
-        <span class="collect">{{ goodsItem.cfav }}</span>
-      </div>
-    </a>
+  <div class="goods" @click="itemClick">
+    <img :src="goodsItem.show.img" alt="" @load="imgLoad" />
+    <div class="goods-info">
+      <p>{{ goodsItem.title }}</p>
+      <span class="price">{{ goodsItem.price }}</span>
+      <span class="collect">{{ goodsItem.cfav }}</span>
+    </div>
   </div>
 </template>
 
@@ -22,12 +20,21 @@ export default {
       },
     },
   },
-  methods:{
-    imgLoad(){
+  methods: {
+    imgLoad() {
       // 这里使用事件总线$bus $bus和vuex区别在于$bus是用于管理事件的监听 vuex主要管理状态
-      this.$bus.$emit('itemImgLoad')
-    }
-  }
+      this.$bus.$emit("itemImgLoad");
+    },
+    itemClick() {
+      // 跳转到详情页
+      this.$router.push({
+        path: "/detail",
+        query: {
+          iid: this.goodsItem.iid,
+        },
+      });
+    },
+  },
 };
 </script>
 
