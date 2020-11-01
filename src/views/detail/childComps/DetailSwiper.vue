@@ -6,7 +6,7 @@
     indicator-color="white"
   >
     <van-swipe-item v-for="(item, index) in topImages" :key="index">
-      <img :src="item" />
+      <img :src="item" @load="loadEnd"/>
     </van-swipe-item>
   </van-swipe>
 </template>
@@ -33,7 +33,11 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
-  methods: {},
+  methods: {
+    loadEnd(){
+      this.$emit('imgLoadEnd')
+    }
+  },
 };
 </script>
 

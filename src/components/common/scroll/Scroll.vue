@@ -43,20 +43,21 @@ export default {
         this.$emit("scroll", pos);
       });
 
-
-      this.scroll.on("pullingUp", ()=>{
-        this.$emit("pullingUp");
-      });
+      if (this.pullUpLoad) {
+        this.scroll.on("pullingUp", () => {
+          this.$emit("pullingUp");
+        });
+      }
     },
     scrollTo(x, y, time = 300) {
       this.scroll?.scrollTo(x, y, time);
     },
-    finishPullUp(){
-      this.scroll?.finishPullUp()
+    finishPullUp() {
+      this.scroll?.finishPullUp();
     },
-    refresh(){
-      this.scroll?.refresh()
-    }
+    refresh() {
+      this.scroll?.refresh();
+    },
   },
 };
 </script>
