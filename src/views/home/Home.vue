@@ -58,6 +58,7 @@ import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/utils";
+import { itemListenerMixin } from "common/mixin";
 
 export default {
   name: "home",
@@ -75,10 +76,10 @@ export default {
       tabOffsetTop: 0,
       offsetHeight: 0,
       isTabFixed: false,
-      saveY:0,
-      homeItemListener: null,
+      saveY: 0,
     };
   },
+  mixins: [itemListenerMixin],
   computed: {
     showGoods() {
       return this.goods[this.curType].list;
@@ -103,22 +104,23 @@ export default {
     this.getHomeGoodsMethod("sell");
   },
   mounted() {
-    // 3.监听事件总线的图片加载事件
-    const refresh = debounce(this.$refs.scroll?.refresh, 200);
-    this.homeItemListener = () => {
-      // 作用是可以在图片加载后重新计算现在可滚动区域的高度，避免图片还没加载结束就已经算好高度，或者切换类别的时候用上一个类别的高度
-      refresh();
-    };
-    this.$bus.$on("itemImgLoad", this.homeItemListener);
+    // 混入替代
+    // // 3.监听事件总线的图片加载事件
+    // const refresh = debounce(this.$refs.scroll?.refresh, 200);
+    // this.itemListener = () => {
+    //   // 作用是可以在图片加载后重新计算现在可滚动区域的高度，避免图片还没加载结束就已经算好高度，或者切换类别的时候用上一个类别的高度
+    //   refresh();
+    // };
+    // this.$bus.$on("itemImgLoad", this.itemListener);
   },
-  activated(){
+  activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 500);
   },
   deactivated() {
     // 离开时保留Y值，回来的时候留在Y
-    this.saveY=this.$refs.scroll.getCurrentY()
+    this.saveY = this.$refs.scroll.getCurrentY();
     // 离开home的时候取消监听，否则detail里也会有这个事件
-    this.$bus.$off("itemImgLoad", this.homeItemListener);
+    this.$bus.$off("itemImgLoad", this.itemListener);
   },
   watch: {
     curType(curType) {

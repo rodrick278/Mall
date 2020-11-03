@@ -6,7 +6,7 @@
     indicator-color="white"
   >
     <van-swipe-item v-for="(item, index) in topImages" :key="index">
-      <img :src="item" @load="loadEnd"/>
+      <img :src="item" @load="loadEnd" />
     </van-swipe-item>
   </van-swipe>
 </template>
@@ -27,16 +27,25 @@ export default {
   data() {
     return {
       isLoad: false,
+      topImagesLength: 0,
+      curLength: 0,
     };
   },
   components: {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
   },
+  watch: {
+    topImages(newValue) {
+      this.topImagesLength = newValue.length;
+    },
+  },
   methods: {
-    loadEnd(){
-      this.$emit('imgLoadEnd')
-    }
+    loadEnd() {
+      if (++this.curLength === this.topImagesLength) {
+        this.$emit("imgLoadEnd");
+      }
+    },
   },
 };
 </script>

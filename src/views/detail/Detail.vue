@@ -1,12 +1,16 @@
 <template>
   <div id="detail">
     <!-- 顶部 -->
-    <detail-nav-bar></detail-nav-bar>
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar
+      @titleClick="titleClick"
+      ref="detailNavBar"
+    ></detail-nav-bar>
+    <scroll class="content" ref="scroll" :probeType="3" @scroll="scrollPos">
       <!-- 轮播 -->
       <detail-swiper
         :topImages="topImages"
-        @imgLoadEnd="imgLoadEnd"
+        @imgLoadEnd="imgLoadRefresh"
+        ref="swiperInfo"
       ></detail-swiper>
       <!-- 标题区域 -->
       <detail-base-info :goods="goods"></detail-base-info>
@@ -15,14 +19,20 @@
       <!-- 下方信息 -->
       <detail-goods-info
         :detailInfo="detailInfo"
-        @goodsInfoImgLoadOver="goodsInfoImgLoadOver"
+        @goodsInfoImgLoadOver="imgLoadRefresh"
       ></detail-goods-info>
       <!-- 参数 -->
-      <detail-param-info :paramInfo="paramInfo"></detail-param-info>
+      <detail-param-info
+        ref="paramInfo"
+        :paramInfo="paramInfo"
+      ></detail-param-info>
       <!-- 评论 -->
-      <detail-comment-info :commentInfo="commentInfo"></detail-comment-info>
+      <detail-comment-info
+        ref="commentInfo"
+        :commentInfo="commentInfo"
+      ></detail-comment-info>
       <!-- 推荐商品 -->
-      <goods-list :goods="recommendList"></goods-list>
+      <goods-list ref="listInfo" :goods="recommendList"></goods-list>
     </scroll>
   </div>
 </template>
@@ -39,7 +49,8 @@ import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
 
-import { debounce } from "common/utils";
+import { debounce, throttle } from "common/utils";
+import { itemListenerMixin } from "common/mixin";
 
 import {
   getDetailnfo,
@@ -72,9 +83,12 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommendList: [],
-      detailItemListener: null,
+      themeTopYs: [],
+      getThemeTopY: null,
+      curIndex: 0,
     };
   },
+  mixins: [itemListenerMixin],
   async created() {
     // 获取所有详情数据
     this.iid = this.$route.query.iid;
@@ -107,23 +121,81 @@ export default {
     this.recommendList = list;
   },
   mounted() {
-    const refresh = debounce(this.$refs.scroll?.refresh, 200);
+    // mixin替代
+    // const refresh = debounce(this.$refs.scroll?.refresh, 200);
+    // this.itemListener = () => {
+    //   refresh();
+    // };
+    // this.$bus.$on("itemImgLoad", this.itemListener);
 
-    this.detailItemListener = () => {
-      refresh();
-    };
-    this.$bus.$on("itemImgLoad", this.detailItemListener);
+    // 给 getThemeTopY 赋值
+    this.getThemeTopY = debounce(() => {
+      this.themeTopYs = [];
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.paramInfo.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.commentInfo.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.listInfo.$el.offsetTop);
+      this.themeTopYs.push(Number.MAX_VALUE);
+      console.log(this.themeTopYs);
+    }, 500);
   },
   distroyed() {
     // 离开home的时候取消监听，否则detail里也会有这个事件
-    this.$bus.$off("itemImgLoad", this.detailItemListener);
+    this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
-    imgLoadEnd() {
+    imgLoadRefresh() {
       this.$refs.scroll.refresh();
+      // console.log(this, this.getThemeTopY);
+      this.getThemeTopY();
     },
-    goodsInfoImgLoadOver() {
-      this.$refs.scroll.refresh();
+    titleClick(index) {
+      let param = "";
+      switch (index) {
+        case 0:
+          param = this.$refs.swiperInfo.$el;
+          break;
+        case 1:
+          param = this.$refs.paramInfo.$el;
+          break;
+        case 2:
+          param = this.$refs.commentInfo.$el;
+          break;
+        case 3:
+          param = this.$refs.listInfo.$el;
+          break;
+
+        default:
+          break;
+      }
+      this.$refs.scroll.scrollToElement(param, 400);
+    },
+    scrollPos(pos) {
+      // this.throttleListener(pos);
+      // if (Math.abs(pos.y) >= this.themeTopYs[3] - 46) {
+      //   // console.log(3);
+      //   this.$refs.detailNavBar.curIndex = 3;
+      // } else if (Math.abs(pos.y) >= this.themeTopYs[2] - 46) {
+      //   // console.log(2);
+      //   this.$refs.detailNavBar.curIndex = 2;
+      // } else if (Math.abs(pos.y) >= this.themeTopYs[1] - 46) {
+      //   // console.log(1);
+      //   this.$refs.detailNavBar.curIndex = 1;
+      // } else {
+      //   // console.log(0);
+      //   this.$refs.detailNavBar.curIndex = 0;
+      // }
+
+      for (let i = 0; i < this.themeTopYs.length - 1; i++) {
+        if (
+          this.curIndex !== i &&
+          Math.abs(pos.y) >= this.themeTopYs[i]-46 &&
+          Math.abs(pos.y) < this.themeTopYs[i + 1]-46
+        ) {
+          this.curIndex = i;
+          this.$refs.detailNavBar.curIndex = this.curIndex;
+        }
+      }
     },
   },
 };

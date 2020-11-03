@@ -58,9 +58,12 @@ export default {
     refresh() {
       this.scroll?.refresh();
     },
-    getCurrentY(){
-      return this.scroll.y
-    }
+    getCurrentY() {
+      return this.scroll.y;
+    },
+    scrollToElement(el, time = 500, offsetX = 0, offsetY = 0) {
+      this.scroll?.scrollToElement(el, time, offsetX, offsetY);
+    },
   },
 };
 </script>
