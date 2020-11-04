@@ -1,7 +1,7 @@
 var moment = require('moment');
 
 
-export function debounce(func, delay=500) {
+export function debounce(func, delay = 500) {
   let timer = null;
   return function (...args) {
     if (timer) clearTimeout(timer);
@@ -16,23 +16,20 @@ export function throttle(fn, wait) {
   let lastTime = 0
   let timer = null
   let nowTime = new Date().getTime();
+  let param = null
 
   return function (...args) {
-    
+    param = args
     if (nowTime - lastTime > wait) {
-      fn.apply(this, args)
+      fn.apply(this, param)
       lastTime = nowTime
     } else if (timer === null) {
       timer = setTimeout(() => {
         timer = null
-        fn.apply(this, args)
+        fn.apply(this, param)
       }, wait)
-      
     }
   }
-
-
-
 }
 
 export function formatDate(date, fmt) {

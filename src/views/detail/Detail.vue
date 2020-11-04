@@ -34,6 +34,9 @@
       <!-- 推荐商品 -->
       <goods-list ref="listInfo" :goods="recommendList"></goods-list>
     </scroll>
+    <!-- 底部 -->
+    <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
+    <back-top @click.native="btClick" v-show="isShow"></back-top>
   </div>
 </template>
 
@@ -48,9 +51,10 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
+import DetailBottomBar from "./childComps/DetailBottomBar";
 
 import { debounce, throttle } from "common/utils";
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 import {
   getDetailnfo,
@@ -70,6 +74,7 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
+    DetailBottomBar,
     GoodsList,
     Scroll,
   },
@@ -88,7 +93,7 @@ export default {
       curIndex: 0,
     };
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   async created() {
     // 获取所有详情数据
     this.iid = this.$route.query.iid;
@@ -136,7 +141,6 @@ export default {
       this.themeTopYs.push(this.$refs.commentInfo.$el.offsetTop);
       this.themeTopYs.push(this.$refs.listInfo.$el.offsetTop);
       this.themeTopYs.push(Number.MAX_VALUE);
-      console.log(this.themeTopYs);
     }, 500);
   },
   distroyed() {
@@ -171,6 +175,7 @@ export default {
       this.$refs.scroll.scrollToElement(param, 400);
     },
     scrollPos(pos) {
+      // 节流方法和传统判断，其实没必要
       // this.throttleListener(pos);
       // if (Math.abs(pos.y) >= this.themeTopYs[3] - 46) {
       //   // console.log(3);
@@ -189,13 +194,30 @@ export default {
       for (let i = 0; i < this.themeTopYs.length - 1; i++) {
         if (
           this.curIndex !== i &&
-          Math.abs(pos.y) >= this.themeTopYs[i]-46 &&
-          Math.abs(pos.y) < this.themeTopYs[i + 1]-46
+          Math.abs(pos.y) >= this.themeTopYs[i] - 46 &&
+          Math.abs(pos.y) < this.themeTopYs[i + 1] - 46
         ) {
           this.curIndex = i;
           this.$refs.detailNavBar.curIndex = this.curIndex;
         }
       }
+
+      // 判断 back-top 是否显示
+      this.isShow = Math.abs(pos.y) > 500;
+    },
+    addToCart() {
+      // 1.创建对象
+      const obj = {};
+      // 2.对象信息
+      obj.iid = this.iid;
+      obj.imgURL = this.topImages[0];
+      obj.title = this.goods.title;
+      obj.desc = this.goods.desc;
+      obj.newPrice = this.goods.nowPrice;
+      this.$store.commit({
+        type: "addCart",
+        obj,
+      });
     },
   },
 };
@@ -203,12 +225,12 @@ export default {
 
 <style scoped>
 #detail {
-  z-index: 9999;
+  z-index: 10000;
   position: relative;
   background-color: #fff;
 }
 .content {
-  height: calc(100vh - 44px);
+  height: calc(100vh - 44px - 59px);
   overflow: hidden;
 }
 </style>

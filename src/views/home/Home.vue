@@ -58,7 +58,7 @@ import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/utils";
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin,backTopMixin } from "common/mixin";
 
 export default {
   name: "home",
@@ -72,14 +72,14 @@ export default {
         sell: { page: 0, list: [] },
       },
       curType: "pop",
-      isShow: false,
+      // isShow: false,
       tabOffsetTop: 0,
       offsetHeight: 0,
       isTabFixed: false,
       saveY: 0,
     };
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin,backTopMixin],
   computed: {
     showGoods() {
       return this.goods[this.curType].list;
@@ -93,7 +93,7 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
+    // BackTop,
   },
   created() {
     // 1.请求首页的多个数据
@@ -174,9 +174,9 @@ export default {
           break;
       }
     },
-    btClick() {
-      this.$refs.scroll.scrollTo(0, 0, 500);
-    },
+    // btClick() {
+    //   this.$refs.scroll.scrollTo(0, 0, 500);
+    // },
     contentScroll(pos) {
       // 判断 back-top 是否显示
       this.isShow = Math.abs(pos.y) > 500;
