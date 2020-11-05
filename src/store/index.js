@@ -1,26 +1,25 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import mutations from "./mutations";
+import actions from "./actions";
+
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-    cartList: []
-  },
-  mutations: {
-    addCart(state, payload) {
-      let haveIndex = state.cartList.findIndex(element => element.iid == payload.obj.iid)
-      if (haveIndex >= 0) {
-        state.cartList[haveIndex].count++
-      } else {
-        payload.obj.count = 0
-        state.cartList.push(payload.obj)
-      }
+const state = {
+  cartList: []
+}
+const getters = {
+  cartLength(state) {
+    return state.cartList.length
+  }
+}
 
-    }
-  },
-  actions: {
-  },
+export default new Vuex.Store({
+  state,
+  getters,
+  mutations,
+  actions,
   modules: {
   }
 })
