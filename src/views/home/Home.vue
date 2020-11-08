@@ -204,7 +204,6 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-  z-index: 9999;
   /* 由于BSCroll只会滚动限制区域，所以 home-nav 就不用 fixed 来脱离文档流了 */
   /* position: fixed;
   top: 0;

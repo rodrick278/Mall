@@ -48,13 +48,15 @@ npm run build
   * [x] 顶部栏和下方滚动联动
   * [ ] 底部加入购物车功能
     * [x] 简易版： 直接添加进vuex
-    * [ ] 弹框选择样式数量[数据待确认，样式未做]
+    * [x] 弹框选择样式数量[Toast代替--数据待确认，样式未做]
 
   <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201104233936592.png" alt="image-20201104233936592" style="zoom:33%;" />
 
   <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201104233958931.png" alt="image-20201104233958931" style="zoom:33%;" />
 
   <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201104234015776.png" alt="image-20201104234015776" style="zoom:33%;" />
+
+  <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201109000659601.png" alt="image-20201109000659601" style="zoom:33%;" />
 
 * 分类页
 
@@ -63,7 +65,12 @@ npm run build
 * 购物车
 
   * [x] vuex存储信息
-  * [ ] 显示信息
+
+  * [x] 显示信息
+
+  * [x] 全选联动效果
+
+    <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201108233550925.png" alt="image-20201108233550925" style="zoom:50%;" />
 
 * 我的
 

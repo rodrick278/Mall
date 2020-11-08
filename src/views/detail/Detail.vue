@@ -56,6 +56,7 @@ import DetailBottomBar from "./childComps/DetailBottomBar";
 import { debounce, throttle } from "common/utils";
 import { itemListenerMixin, backTopMixin } from "common/mixin";
 
+
 import {
   getDetailnfo,
   getRecommend,
@@ -225,7 +226,7 @@ export default {
 
 <style scoped>
 #detail {
-  z-index: 10000;
+  z-index: 100;
   position: relative;
   background-color: #fff;
 }

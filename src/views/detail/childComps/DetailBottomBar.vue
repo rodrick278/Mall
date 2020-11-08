@@ -22,11 +22,20 @@
 </template>
 
 <script>
+import { Toast } from "vant";
+
 export default {
   name: "DetailBottomBar",
+  components: {
+    Toast,
+  },
   methods: {
     addToCart() {
       this.$emit("addToCart");
+      Toast.success({
+        message: "加入成功！",
+        duration: 1000,
+      });
     },
   },
 };
