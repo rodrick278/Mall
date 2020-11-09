@@ -44,7 +44,6 @@ export default {
 .nav-bar {
   background-color: var(--color-tint);
   color: #fff;
-  font-size: 20px;
 }
 .content {
   height: calc(100vh - 44px - 49px - 50px - 3px);

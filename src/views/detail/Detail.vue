@@ -56,6 +56,7 @@ import DetailBottomBar from "./childComps/DetailBottomBar";
 import { debounce, throttle } from "common/utils";
 import { itemListenerMixin, backTopMixin } from "common/mixin";
 
+import { mapActions } from "vuex";
 
 import {
   getDetailnfo,
@@ -149,6 +150,7 @@ export default {
     this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
+    ...mapActions(["addCart"]),
     imgLoadRefresh() {
       this.$refs.scroll.refresh();
       // console.log(this, this.getThemeTopY);
@@ -207,6 +209,11 @@ export default {
       this.isShow = Math.abs(pos.y) > 500;
     },
     addToCart() {
+      this.$toast.loading({
+        message: "等一下哦...",
+        forbidClick: true,
+        loadingType: "spinner",
+      });
       // 1.创建对象
       const obj = {};
       // 2.对象信息
@@ -215,9 +222,13 @@ export default {
       obj.title = this.goods.title;
       obj.desc = this.goods.desc;
       obj.newPrice = this.goods.nowPrice;
-      this.$store.dispatch({
-        type: "addCart",
-        obj,
+      this.addCart({obj}).then((res) => {
+        setTimeout(() => {
+          this.$toast.success({
+            message: res,
+            duration: 1000,
+          });
+        }, 500);
       });
     },
   },

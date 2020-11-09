@@ -11,7 +11,7 @@
 
     <div class="price">合计：￥{{ totalPrice }}</div>
 
-    <div class="calc">去结算({{ checkLength }})</div>
+    <div class="calc" @click="checkClick">去结算({{ checkLength }})</div>
   </div>
 </template>
 
@@ -50,6 +50,11 @@ export default {
         howCheck: !this.isCheckAll,
       });
     },
+    checkClick(){
+      this.$toast.fail({
+        message: "施工中🚧...",
+      });
+    }
   },
 };
 </script>
