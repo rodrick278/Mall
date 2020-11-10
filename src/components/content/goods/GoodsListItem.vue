@@ -1,5 +1,6 @@
 <template>
   <div class="goods" @click="itemClick">
+    <!-- 切换标签时不触发@load事件解决【img标签需要加:key 强制刷新】 -->
     <img v-lazy="imgUrl" alt="" @load="imgLoad" :key="imgUrl"/>
     <div class="goods-info">
       <p>{{ goodsItem.title }}</p>
