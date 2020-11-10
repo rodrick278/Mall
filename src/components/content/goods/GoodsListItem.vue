@@ -1,6 +1,6 @@
 <template>
   <div class="goods" @click="itemClick">
-    <img :src="imgUrl" alt="" @load="imgLoad" />
+    <img v-lazy="imgUrl" alt="" @load="imgLoad" :key="imgUrl"/>
     <div class="goods-info">
       <p>{{ goodsItem.title }}</p>
       <span class="price">{{ goodsItem.price }}</span>
@@ -47,11 +47,11 @@ export default {
 .goods {
   padding-bottom: 40px;
   position: relative;
-
   width: 48vw;
 }
 .goods img {
   width: 100%;
+  height: 100%;
   border-radius: 5px;
 }
 

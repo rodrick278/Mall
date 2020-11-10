@@ -58,7 +58,7 @@ import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/utils";
-import { itemListenerMixin,backTopMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 export default {
   name: "home",
@@ -79,7 +79,7 @@ export default {
       saveY: 0,
     };
   },
-  mixins: [itemListenerMixin,backTopMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   computed: {
     showGoods() {
       return this.goods[this.curType].list;
@@ -154,6 +154,7 @@ export default {
       // 动态拿到page值 然后对当前的page+1
       const page = this.goods[type].page + 1;
       getHomeGoods(type, page).then((res) => {
+        console.log(this.goods[type]);
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       });
@@ -173,6 +174,7 @@ export default {
           this.curType = "sell";
           break;
       }
+      // this.$refs.scroll.refresh();
     },
     // btClick() {
     //   this.$refs.scroll.scrollTo(0, 0, 500);
