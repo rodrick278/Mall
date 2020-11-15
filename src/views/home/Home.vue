@@ -154,7 +154,6 @@ export default {
       // 动态拿到page值 然后对当前的page+1
       const page = this.goods[type].page + 1;
       getHomeGoods(type, page).then((res) => {
-        console.log(this.goods[type]);
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
       });

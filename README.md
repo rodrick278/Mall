@@ -1,22 +1,10 @@
-# supermall
+# 🏳‍🌈仿商城项目
 
-## Project setup
+## 😊关于我
 
-```
-npm install
-```
+[![](https://badgen.net/badge/blog/檐上有月☽/?icon=sourcegraph&color=FFC83D)](https://rodrick.cn) [![](https://badgen.net/badge/github/Rodrick278/?icon=github&color=blue&label)](https://github.com/rodrick278/) [![](https://badgen.net/badge/yuque/yuque/?icon=telegram&color=34CE7B&label)](https://www.yuque.com/rodrick-miz0p)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-## 项目详情
+## 🍤项目详情
 
 ### 主要功能🎉
 
@@ -46,9 +34,9 @@ npm run build
   * [x] 滚动区域[轮播，标题，店铺信息，下方信息，参数，评论，推荐商品]
   * [x] 底部
   * [x] 顶部栏和下方滚动联动
-  * [ ] 底部加入购物车功能
+  * [x] 底部加入购物车功能
     * [x] 简易版： 直接添加进vuex
-    * [x] 弹框选择样式数量[Toast代替--数据待确认，样式未做]
+    * [x] 弹框提示
 
   <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201104233936592.png" alt="image-20201104233936592" style="zoom:33%;" />
 
@@ -60,7 +48,11 @@ npm run build
 
 * 分类页
 
-  * [ ] 未做
+  * [x] 基本数据处理+样式
+
+  * [x] grid使用
+
+    <img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201116000817291.png" alt="image-20201116000817291" style="zoom: 50%;" />
 
 * 购物车
 
@@ -74,4 +66,9 @@ npm run build
 
 * 我的
 
-  * [ ] 纯样式
+  * [x] 基本样式
+  * [x] svg 使用 svg-sprite-loader 进行配置和处理
+
+<img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201116000921650.png" alt="image-20201116000921650" style="zoom:50%;" />
+
+<img src="https://gitee.com/rodrick278/img/raw/master/img/image-20201116001005820.png" alt="image-20201116001005820" style="zoom: 50%;" />

@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     imgUrl() {
-      return this.goodsItem.image || this.goodsItem.show.img
+      return this.goodsItem.image || this.goodsItem.show?.img || this.goodsItem.img
     }
   },
   methods: {
@@ -48,7 +48,8 @@ export default {
 .goods {
   padding-bottom: 40px;
   position: relative;
-  width: 48vw;
+  /* width: 48vw; */
+  width: 48%;
 }
 .goods img {
   width: 100%;
